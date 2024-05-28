@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data-COPilot</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+  }
+  .container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+  }
+  .header {
+    text-align: center;
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+  }
+  .form-group {
+    margin-bottom: 10px;
+  }
+  .form-group label {
+    display: block;
+  }
+  .form-group input[type="text"],
+  .form-group select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+  }
+  .form-group button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .form-group button:hover {
+    background-color: #218838;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>Data-COPilot</h1>
+  </div>
+  <form id="dataForm">
+    <div class="form-group">
+      <label for="sqlInput">请输入SQL语句:</label>
+      <textarea id="sqlInput" name="sql" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+      <label for="databaseSelect">数据库:</label>
+      <select id="databaseSelect" name="database">
+        <option value="database1">数据库1</option>
+        <option value="database2">数据库2</option>
+        <option value="database3">数据库3</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="startTime">开始时间:</label>
+      <input type="datetime-local" id="startTime" name="startTime">
+    </div>
+    <div class="form-group">
+      <button type="submit">执行</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  document.getElementById('dataForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    // 这里可以添加提交表单的逻辑，例如发送AJAX请求到服务器
+    alert('表单已提交！');
+  });
+</script>
+
+</body>
+</html>
