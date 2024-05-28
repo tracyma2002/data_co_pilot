@@ -23,6 +23,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #path('',data_pilot.views.index),
     path('login/',data_pilot.views.myhome),
-    path('home/', data_pilot.views.login),
+    path('home/', data_pilot.views.home),
+    path('api/nl2sql/', data_pilot.views.natural_language_to_sql_view, name='nl2sql'),
 
 ]
