@@ -54,7 +54,7 @@ ROOT_URLCONF = 'data_co_pilot.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [str(BASE_DIR)+"/data_pilot/template"],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
