@@ -1,4 +1,5 @@
 from django.shortcuts import render,HttpResponse
+import json
 
 def index(request):
     #data = request.GET['data']
@@ -8,7 +9,7 @@ def myhome(request):
     return render(request,"index.html")
 
 
-def login(request):
+def home(request):
     # 检查请求方法是否为POST
     if request.method == 'POST':
         # 获取表单提交的用户名和密码
