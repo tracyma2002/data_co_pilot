@@ -5,79 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Data-COPilot</title>
 <style>
-  body {
-    font-family: Arial, sans-serif;
-  }
-  .container {
-    width: 80%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f7f7f7;
+  body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
   .header {
-    text-align: center;
-    padding: 10px;
-    background-color: #007BFF;
+    background-color: #007BFF; /* 深蓝色背景 */
     color: white;
-  }
-  .form-group {
-    margin-bottom: 10px;
-  }
-  .form-group label {
-    display: block;
-  }
-  .form-group input[type="text"],
-  .form-group select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-  }
-  .form-group button {
     padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影 */
   }
-  .form-group button:hover {
-    background-color: #218838;
+  .header h1 {
+    margin: 0;
+  }
+  .sidebar {
+    background-color: #F8F9FA; /* 浅灰色背景 */
+    width: 150px;
+    position: fixed;
+    z-index: 1;
+    top: 63px; /* 导航栏向下移动 */
+    left: 0;
+    height: calc(100% - 60px); /* 减去顶部60px */
+    overflow-x: hidden;
+    padding: 20px;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1); /* 阴影 */
+  }
+  .sidebar a {
+    padding: 10px 20px;
+    margin: 5px 0;
+    text-decoration: none;
+    font-size: 18px;
+    color: #007BFF; /* 深蓝色文字 */
+    display: block;
+    border-radius: 4px; /* 圆角边框 */
+    transition: background-color 0.3s ease;
+  }
+  .sidebar a:hover, .sidebar .active {
+    background-color: #E1ECF4; /* 浅蓝色背景 */
+  }
+  .main-content {
+    margin-left: 250px; /* 与导航栏宽度一致 */
+    padding: 20px;
+    width: calc(100% - 250px); /* 减去导航栏宽度 */
+  }
+  .footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.8em;
+    color: #666;
+    width: calc(100% - 250px); /* 减去导航栏宽度 */
+    padding: 10px 0;
+    background-color: #F8F9FA; /* 浅灰色背景 */
+    box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* 阴影 */
+    position: relative;
   }
 </style>
 </head>
 <body>
 
-<div class="container">
-  <div class="header">
-    <h1>Data-COPilot</h1>
+<div class="header">
+  <h1>Data-COPilot</h1>
+</div>
+
+<div class="sidebar">
+  <a href="#query">查询</a>
+  <a href="#dataAnalysis">数据分析</a>
+  <a href="#export">导出</a>
+</div>
+
+<div class="main-content">
+  <!-- 主要内容 -->
+  <div id="query" class="content" style="display:none;">
+    <h2>查询</h2>
+    <!-- 查询表单 -->
   </div>
-  <form id="dataForm">
-    <div class="form-group">
-      <label for="sqlInput">请输入SQL语句:</label>
-      <textarea id="sqlInput" name="sql" rows="4" required></textarea>
-    </div>
-    <div class="form-group">
-      <label for="databaseSelect">数据库:</label>
-      <select id="databaseSelect" name="database">
-        <option value="database1">数据库1</option>
-        <option value="database2">数据库2</option>
-        <option value="database3">数据库3</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="startTime">开始时间:</label>
-      <input type="datetime-local" id="startTime" name="startTime">
-    </div>
-    <div class="form-group">
-      <button type="submit">执行</button>
-    </div>
-  </form>
+    <div id="dataAnalysis" class="content" style="display:none;">
+    <h2>数据分析</h2>
+    <!-- 数据分析工具 -->
+  </div>
+  <div id="export" class="content" style="display:none;">
+    <h2>导出</h2>
+    <!-- 导出选项 -->
+  </div>
+</div>
+
+<div class="footer">
+  <p>© 2024 Data-COPilot. All rights reserved.</p>
 </div>
 
 <script>
-  document.getElementById('dataForm').addEventListener('submit', function(event) {
-    event.preventDefault();
-    // 这里可以添加提交表单的逻辑，例如发送AJAX请求到服务器
-    alert('表单已提交！');
+  // 导航栏选项点击事件
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      // 移除所有链接的active类
+      document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
+      // 添加当前链接的active类
+      this.classList.add('active');
+      // 切换内容显示
+      document.querySelectorAll('.main-content .content').forEach(div => {
+        div.style.display = 'none';
+      });
+      const sectionId = this.getAttribute('href').substring(1);
+      document.getElementById(sectionId).style.display = 'block';
+    });
   });
 </script>
 
