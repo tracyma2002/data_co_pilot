@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     #path('',data_pilot.views.index),
     path('',data_pilot.views.myhome),
+    path('login/', data_pilot.views.login),
+
 ]
