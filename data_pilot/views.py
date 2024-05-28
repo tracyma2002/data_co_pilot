@@ -28,6 +28,9 @@ def home(request):
         else:
             return HttpResponse("用户名或密码错误")
 
+def search(request):
+    return render(request, 'search.html')
+
 
 def natural_language_to_sql_view(request):
     # 初始化大型语言模型
