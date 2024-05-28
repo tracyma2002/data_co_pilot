@@ -22,4 +22,4 @@ def login(request):
         else:
             return HttpResponse("用户名或密码错误")
 
-    return render(request, 'index.html')
+
