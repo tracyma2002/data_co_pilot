@@ -23,3 +23,5 @@ def login(request):
             return HttpResponse("用户名或密码错误")
 
 
+def search(request):
+    return render(request,"search.html")

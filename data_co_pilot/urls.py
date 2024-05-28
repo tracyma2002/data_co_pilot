@@ -24,5 +24,6 @@ urlpatterns = [
     #path('',data_pilot.views.index),
     path('login/',data_pilot.views.myhome),
     path('home/', data_pilot.views.login),
+    path('search/', data_pilot.views.search),
 
 ]
