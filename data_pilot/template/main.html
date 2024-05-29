@@ -70,49 +70,18 @@
 </div>
 
 <div class="sidebar">
-  <a href="#query">查询</a>
+  <a href="search.html">查询</a>
   <a href="#dataAnalysis">数据分析</a>
   <a href="#export">导出</a>
 </div>
 
-<div class="main-content">
-  <!-- 主要内容 -->
-  <div id="query" class="content" style="display:none;">
-    <h2>查询</h2>
-    <!-- 查询表单 -->
-  </div>
-    <div id="dataAnalysis" class="content" style="display:none;">
-    <h2>数据分析</h2>
-    <!-- 数据分析工具 -->
-  </div>
-  <div id="export" class="content" style="display:none;">
-    <h2>导出</h2>
-    <!-- 导出选项 -->
-  </div>
-</div>
+
 
 <div class="footer">
   <p>© 2024 Data-COPilot. All rights reserved.</p>
 </div>
 
-<script>
-  // 导航栏选项点击事件
-  document.querySelectorAll('.sidebar a').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      // 移除所有链接的active类
-      document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
-      // 添加当前链接的active类
-      this.classList.add('active');
-      // 切换内容显示
-      document.querySelectorAll('.main-content .content').forEach(div => {
-        div.style.display = 'none';
-      });
-      const sectionId = this.getAttribute('href').substring(1);
-      document.getElementById(sectionId).style.display = 'block';
-    });
-  });
-</script>
+
 
 </body>
 </html>
