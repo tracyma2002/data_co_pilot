@@ -1,4 +1,16 @@
 from django.shortcuts import render,HttpResponse
+import json
+from django.db import connection
+from django.http import JsonResponse
+from langchain.llms import OpenAI
+from langchain_experimental.sql import SQLDatabaseChain
+from langchain.utilities import SQLDatabase
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.core.exceptions import ValidationError
+
 
 def index(request):
     #data = request.GET['data']
@@ -8,7 +20,7 @@ def myhome(request):
     return render(request,"index.html")
 
 
-def login(request):
+def home(request):
     # 检查请求方法是否为POST
     if request.method == 'POST':
         # 获取表单提交的用户名和密码
@@ -23,3 +35,71 @@ def login(request):
             return HttpResponse("用户名或密码错误")
 
 
+def register(request):
+    if request.method == 'POST':
+        # 获取表单数据
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+
+        # 验证输入数据的有效性
+        if not username or not password or not email:
+            return JsonResponse({"error": "所有字段都是必填的"}, status=400)
+
+        # 检查用户名是否已存在
+        try:
+            user = User.objects.get(username=username)
+            return JsonResponse({"error": "用户名已存在"}, status=400)
+        except User.DoesNotExist:
+            pass
+
+        # 创建新用户
+        try:
+            User.objects.create_user(username=username, email=email, password=make_password(password))
+        except ValidationError as e:
+            return JsonResponse({"error": str(e)}, status=400)
+
+        # 注册成功后，重定向到登录页面或其他页面
+        return redirect('login')  # 假设有一个名为 'login' 的登录视图函数
+
+    # 如果是GET请求，显示注册表单
+    else:
+        return render(request, 'register.html')
+    
+def search(request):
+    return render(request, 'search.html')
+
+
+def natural_language_to_sql_view(request):
+    # 初始化大型语言模型
+    llm = OpenAI(temperature=0)
+
+    # 创建数据库连接
+    db = SQLDatabase.from_uri("sqlite:///db.sqlite3")
+
+    # 创建SQL数据库链
+    db_chain = SQLDatabaseChain.from_llm(llm, db, verbose=True)
+
+    # 假设请求中包含自然语言查询
+    natural_language_query = request.GET.get('query', '')
+
+    # 使用LangChain将自然语言转换为SQL查询
+    try:
+        sql_query = db_chain.run(natural_language_query)
+
+        # 执行SQL查询
+        with connection.cursor() as cursor:
+            cursor.execute(sql_query)
+            rows = cursor.fetchall()
+
+        # 将查询结果转换为列表的字典格式
+        columns = [col for col in cursor.description]
+        results = []
+        for row in rows:
+            results.append(dict(zip(columns, row)))
+
+        # 返回JSON格式的结果
+        return JsonResponse({"sql_query": sql_query, "results": results})
+    except Exception as e:
+        # 处理异常情况
+        return JsonResponse({"error": str(e)}, status=500)
