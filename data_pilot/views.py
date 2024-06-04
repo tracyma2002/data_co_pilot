@@ -29,7 +29,7 @@ def home(request):
 
         # 这里应该有一个真实的用户认证逻辑，比如检查数据库中的用户
         # 为了示例，我们假设用户名是'123'，密码是'456'
-        if username == '123456' and password == '456':
+        if username == '123' and password == '456':
             return render(request,"main.html")
         else:
             return HttpResponse("用户名或密码错误")
