@@ -20,6 +20,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django.db import connection
 from . import api
+import logging
+
+# 引入日志记录器
+logger = logging.getLogger(__name__)
+
 
 def index(request):
     #data = request.GET['data']
@@ -116,14 +121,10 @@ def search(request):
 
 #@csrf_exempt
 def add_query(request):
-    if request.method == 'POST':
-        # 您的 SQL 查询字符串
-        #data = json.loads(request.body)
-        #inputx = request.get('inputx')
-        inputx=request.POST.get('query-question')
-        print(inputx)
-        sql_query = api.get_sql(inputx)
+    # 您的 SQL 查询字符串
+    sql_query = api.get_sql()
 
+    try:
         # 获取数据库连接
         with connection.cursor() as cursor:
             # 执行 SQL 查询
@@ -133,16 +134,13 @@ def add_query(request):
             result = cursor.fetchall()
 
         # 打印结果
-        # for row in result:
-        #     print("结果：",row[0])  # 假设查询结果的第一列是 price
-        # print(result)
-        # 将元组转换为集合，自动去除重复的元组
-        unique_set = set(result)
-        # 将唯一的元组转换回元组形式
-        unique_result = tuple(unique_set)
-        print(unique_result)
-        print(25555)
-        return JsonResponse({
-            'code': 200,
-            'message': unique_result,
-        })
+        for row in result:
+            print(row[0])  # 假设查询结果的第一列是 price
+
+        return HttpResponse(result)
+
+    except Exception as e:
+        # 记录错误日志
+        logger.error("数据库查询出错: %s", e)
+        # 返回错误信息
+        return HttpResponse("您输入的查询语言有问题，请仔细检查后再查询。")

@@ -27,5 +27,5 @@ urlpatterns = [
     path('home/search/',data_pilot.views.search),
     #path('api/nl2sql/', data_pilot.views.natural_language_to_sql_view, name='nl2sql'),
     path('home/search/sql/',data_pilot.views.add_query),
-
+    #path('query/', data_pilot.views.add_query)
 ]
