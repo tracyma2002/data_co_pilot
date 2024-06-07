@@ -86,47 +86,8 @@
         {% csrf_token %}
       <input type="submit" value="提交查询">
     </form>
-     <hr class="my-4">
-    <h2 class="my-4">查询结果</h2>
-    <div id="results-block" class="bg-light p-3">
-        <!-- 结果将在这里显示 -->
-    </div>
   </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $('#query-form').submit(function (event) {
-            event.preventDefault();
-            var formData = {
-                'database-name': $('#database-name').val(),
-                'query-question': $('#query-question').val(),
-            };
-            $.ajax({
-                url: '/submit-query/',
-                type: 'POST',
-                data: formData,
-                success: function (data) {
-                    if (data.results) {
-                        // 清空结果块内容
-                        $('#results-block').empty();
-                        // 格式化并添加新的结果行
-                        data.results.forEach(function (result) {
-                            var formattedResult = JSON.stringify(result, null, 2);
-                            $('#results-block').append('<pre>' + formattedResult + '</pre><br>');
-                        });
-                    } else {
-                        alert('查询失败，请稍后再试。');
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('查询失败，请检查控制台错误信息。');
-                }
-            });
-        });
-    });
-</script>
 
 </body>
 </html>
