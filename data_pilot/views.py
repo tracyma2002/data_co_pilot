@@ -25,7 +25,6 @@ import logging
 # 引入日志记录器
 logger = logging.getLogger(__name__)
 
-
 def index(request):
     #data = request.GET['data']
     return HttpResponse("data-co-pilot")
@@ -119,7 +118,6 @@ def search(request):
 #         return JsonResponse({"error": str(e)}, status=500)
 #
 
-#@csrf_exempt
 def add_query(request):
     # 您的 SQL 查询字符串
     sql_query = api.get_sql()
