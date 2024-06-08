@@ -10,7 +10,7 @@ def get_response(messages):
                                # 将输出设置为"message"格式
                                result_format='message',api_key='sk-50c104e6d0844820bf7c8f81b1a17604')
     return response
-def get_sql():
+def get_sql(request):
     m = """
     from django.db import models
 
@@ -76,7 +76,8 @@ def get_sql():
 
     # 您可以自定义设置对话轮数，当前为3
     for i in range(1):
-        user_input = input("请输入：")
+        #user_input = input("请输入：")
+        user_input = request.POST['query-question']
         messages.append({'role': 'user', 'content': user_input})
         assistant_output = get_response(messages).output.choices[0]['message']['content']
         messages.append({'role': 'assistant', 'content': assistant_output})

@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db import connection
 from . import api
 import logging
+from django.http import HttpRequest
 
 # 引入日志记录器
 logger = logging.getLogger(__name__)
@@ -118,9 +119,11 @@ def search(request):
 #         return JsonResponse({"error": str(e)}, status=500)
 #
 
+
 def add_query(request):
     # 您的 SQL 查询字符串
-    sql_query = api.get_sql()
+
+    sql_query = api.get_sql(request)
 
     try:
         # 获取数据库连接
