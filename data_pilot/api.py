@@ -57,15 +57,14 @@ def get_sql(request):
         请记得，当您在Django模型中定义外键关系时，可以通过on_delete参数来指定当被引用的对象被删除时应该如何处理关联对象
     再添加一个需求：你在写sql语句的时候就不要换行了比如，你原来可能写成：
     ```sql
-        SELECT data_price.price
-    FROM data_Price
-    JOIN data_GPU ON data_Price.GPU_id = data_gpu.id
-    JOIN data_Brand ON data_Price.Brand_id = data_brand.id
-    WHERE data_GPU.GPU_name = 'GeForce RTX 4090'
-    AND data_Brand.name = 'COLORFUL';
+        SELECT students.name, courses.course_name 
+    FROM students 
+    JOIN student_courses ON students.id = student_courses.student_id
+    JOIN courses ON student_courses.course_id = courses.course_id
+    WHERE students.name = 'Alice' AND courses.course_name LIKE '%Calculus%';
     ```
     但是我要你写成：
-    ```sql SELECT data_price.price FROM data_Price JOIN data_GPU ON data_Price.GPU_id = data_gpu.id JOIN data_Brand ON data_Price.Brand_id = data_brand.id WHERE data_GPU.GPU_name = 'GeForce RTX 4090' AND data_Brand.name = 'COLORFUL'; ```
+    ```sql SELECT students.name, courses.course_name FROM students JOIN student_courses ON students.id = student_courses.student_id JOIN courses ON student_courses.course_id = courses.course_id WHERE students.name = 'Alice' AND courses.course_name LIKE '%Calculus%';
         很简单就是把你原来写的换行符改成空格就行
         """
     messages = [{'role': 'system', 'content': 'You are a helpful assistant who masters'
