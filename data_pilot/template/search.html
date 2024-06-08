@@ -72,27 +72,40 @@
     <input type="text" id="database-name" name="database-name">
   </div>
 
-  <div class="section">
-    <h2>查询问题</h2>
-    <!-- 假设这里需要用户输入查询问题 -->
-    <label for="query-question">输入查询问题：</label>
-    <input type="text" id="query-question" name="query-question">
+
+{#  <div class="section">#}
+{#    <h2>查询问题</h2>#}
+{#    <!-- 假设这里需要用户输入查询问题 -->#}
+{#    <label for="query-question">输入查询问题：</label>#}
+{#    <input type="text" id="query-question" name="query-question">#}
+{#  </div>#}
+
+{#  <div class="section">#}
+{#    <h2>查询</h2>#}
+{#    <!-- 查询提交按钮 -->#}
+{#    <form action="sql/" method="post">#}
+{#        {% csrf_token %}#}
+{#      <input type="submit" value="提交查询">#}
+{#    </form>#}
+{#     <hr class="my-4">#}
+{#    <h2 class="my-4">查询结果</h2>#}
+{#    <div id="results-block" class="bg-light p-3">#}
+{#        <!-- 结果将在这里显示 -->#}
+{#    </div>#}
+    <form action="sql/" method="post">
+    {% csrf_token %}
+    <div class="section">
+        <h2>查询问题</h2>
+        <label for="query-question">输入查询问题：</label>
+        <input type="text" id="query-question" name="query-question">
+    </div>
+    <div class="section">
+        <h2>查询</h2>
+        <input type="submit" value="提交查询">
+    </div>
+   </form>
   </div>
 
-  <div class="section">
-    <h2>查询</h2>
-    <!-- 查询提交按钮 -->
-    <form action="sql/" method="post">
-        {% csrf_token %}
-      <input type="submit" value="提交查询">
-    </form>
-     <hr class="my-4">
-    <h2 class="my-4">查询结果</h2>
-    <div id="results-block" class="bg-light p-3">
-        <!-- 结果将在这里显示 -->
-    </div>
-  </div>
-</div>
 
 <script>
     $(document).ready(function () {
