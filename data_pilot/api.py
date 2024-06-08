@@ -14,58 +14,47 @@ def get_sql():
     m = """
     from django.db import models
 
-    class Brand(models.Model):
-        name = models.CharField(max_length=256)
-        stablish_time = models.DateField()
-        ceo = models.CharField(max_length=256)
-        brand_detail = models.OneToOneField("BrandDetail", on_delete=models.CASCADE)
+    class students(models.Model):
+        id = models.AutoField(primary_key=True)
+        name = models.TextField(max_length=100)
+        age = models.IntegerField()
+        gender = models.TextField(max_length=10)
 
-    class BrandDetail(models.Model):
-        headquarters = models.CharField(max_length=256)
-        founder = models.CharField(max_length=256)
-        market_ocp = models.DecimalField(max_digits=10, decimal_places=2)
+    class student_profiles(models.Model):
+        profile_id = models.AutoField(primary_key=True)
+        student_id = models.ForeignKey('students', on_delete=models.CASCADE, unique=True)
+        address = models.TextField()
+        phone = models.TextField()
 
-    class GPU(models.Model):
-        GPU_name = models.CharField(max_length=256)
-        type = models.CharField(max_length=256)
-        frequency = models.DecimalField(max_digits=10, decimal_places=2)
-        power_dissipation = models.DecimalField(max_digits=10, decimal_places=2)
-        VRAM_cap = models.DecimalField(max_digits=10, decimal_places=2)
-        VRAM_type = models.CharField(max_length=256)
-        publish_time = models.DateField()
-            class Price(models.Model):
-        Brand = models.ForeignKey("Brand", on_delete=models.CASCADE)
-        GPU = models.ForeignKey("GPU", on_delete=models.CASCADE)
-        price = models.DecimalField(max_digits=10, decimal_places=2)
-        因为是用的Django架构中的data app中的models.py文件创建的，所以每张表前都会有“data_”前缀，你在使用这些表名的时候一定要加上
-        这里我再给你一些提示data_Brand表通过外键brand_detail_id和data_branddetail表一对一连接，所以你在使用JOIN连接这两张表的时候要使用
-        brand_detail_id=data_branddetail.id作为连接条件，而data_Price表通过外键GPU_id和data_gpu连接，所以你在使用JOIN连接这两张表的时候要使用
-        data_price.GPU_id=data_gpu.id作为连接条件,同理data_Price表通过外键Brand_id和data_brand连接，所以你在使用JOIN连接这两张表的时候要使用
-        data_price.Brand_id=data_brand.id作为连接条件
-        NVIDIA的中文名叫英伟达，COLORFUL的中文名叫做七彩虹，Intel的中文名叫英特尔，MOORE_THREADS的中文名叫做摩尔线程，AMD没有中文名。剩余的几家厂商都是中文名，
-        他们分别是：华硕、技嘉、蓝宝石。
-        在查询AMD、华硕、技嘉、蓝宝石这几家厂商（Brand）时，不要用英文或者拼音去替代他们本来的名称。
-        下面是一些显卡名称（GPU_name）的简称
-        GeForce RTX 4090简称4090;  GeForce RTX 4090 D简称 4090 D;  Radeon RX 7900 XTX简称 7900XTX； 
-        GeForce RTX 4080 SUPER简称 4080 SUPER; GeForce RTX 4080简称 4080; Radeon RX 7900 XT简称 7900XT 
-        GeForce RTX 4070简称 4070; Radeon RX 6950 XT简称 6950 XT; GeForce RTX 3060简称 3060; GTX 1650简称 1650
-        Radeon RX 6650 XT简称 6650 XT; Radeon RX 6500 XT简称 6500 XT 
-        你在写SQL语句的时候不能用简写 ，4090和4090 D完全不是一码事，查询4090有关信息的时候不要出现4090D
-        比如查询4090的均价时，这样写：
-        SELECT AVG(data_price.price) AS average_price
-        FROM data_Price
-        JOIN data_GPU ON data_Price.GPU_id = data_gpu.id
-        WHERE data_GPU.GPU_name = 'GeForce RTX 4090' 
-        不要写：
-        SELECT AVG(data_price.price) AS average_price
-        FROM data_Price
-        JOIN data_GPU ON data_Price.GPU_id = data_gpu.id
-        WHERE data_GPU.GPU_name = 'GeForce RTX 4090' OR data_GPU.GPU_name = 'GeForce RTX 4090 D'
-        如果我这样问：七彩虹生产的4090的价格。那你就转换成：
-        ```sql SELECT data_price.price FROM data_Price JOIN data_GPU ON data_Price.GPU_id = data_gpu.id JOIN data_Brand ON data_Price.Brand_id = data_brand.id WHERE data_GPU.GPU_name = 'GeForce RTX 4090' AND data_Brand.name = 'COLORFUL'; ```
-
-    就行
-        如果我说某个型号的显卡，比如：4090.没有限制是那家厂商的4090.那么请默认是全部厂商的4090
+    class teachers(models.Model):
+        id = models.AutoField(primary_key=True)
+        name = models.CharField(max_length=100)  
+        subject = models.CharField(max_length=100)
+        
+    class courses(models.Model):
+        course_id = models.AutoField(primary_key=True)  # 显式定义主键
+        course_name = models.TextField(max_length=100)  # 假设课程名称的最大长度为100
+        teacher = models.ForeignKey('Teacher', on_delete=models.CASCADE)
+        
+    class student_courses(models.Model):
+        student_id = models.ForeignKey('students', on_delete=models.CASCADE)
+        course_id = models.ForeignKey('courses', on_delete=models.CASCADE)
+        class Meta:
+            unique_together = ('student_id', 'course_id')
+        当您需要创建或查询学生信息时，请使用students模型，并可以通过学生的id、name、age或gender字段进行过滤
+        要获取或更新学生的个人资料，如address和phone，请使用student_profiles模型，并通过外键student_id与students模型关联
+        在添加或修改教师信息时，请使用teachers模型，并可以通过教师的id、name或subject字段进行搜索
+        创建或查询课程详情时，请使用courses模型，并可以通过课程的course_id或course_name字段进行筛选。同时，可以通过外键teacher与teachers模型关联以获取授课教师信息
+        当您需要管理学生选课信息时，请使用student_courses模型。通过student_id和course_id外键字段与students和courses模型关联，并确保通过unique_together元选项保持学生与课程组合的唯一性
+        在执行数据库JOIN操作时，例如查询某个学生的所有课程，可以使用Django的select_related和prefetch_related方法来优化查询性能
+        student_profiles模型通过外键student_id与students模型一对一连接，所以当您在使用Django ORM查询时，要使用student_id=students.id作为关联条件
+        courses模型通过外键teacher与teachers模型连接，所以当您在使用Django ORM查询时，要使用teacher=teachers.id作为关联条件
+        student_courses模型通过外键student_id与students模型连接，所以要使用student_id=students.id作为连接条件
+        同理，student_courses模型通过外键course_id与courses模型连接，所以要使用course_id=courses.course_id作为连接条件
+        当您需要查询某个学生的所有课程时，可以通过students模型的student_course_set相关名称来访问
+        如果您想查询某个课程的所有学生，可以通过courses模型的student_course_set相关名称来访问
+        使用Django的ORM系统，您可以通过模型的字段和方法来构建复杂的查询，例如筛选特定年龄段的学生或特定教师授课的所有课程
+        请记得，当您在Django模型中定义外键关系时，可以通过on_delete参数来指定当被引用的对象被删除时应该如何处理关联对象
     再添加一个需求：你在写sql语句的时候就不要换行了比如，你原来可能写成：
     ```sql
         SELECT data_price.price
