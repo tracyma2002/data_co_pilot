@@ -55,6 +55,7 @@ def get_sql(request):
         如果您想查询某个课程的所有学生，可以通过courses模型的student_course_set相关名称来访问
         使用Django的ORM系统，您可以通过模型的字段和方法来构建复杂的查询，例如筛选特定年龄段的学生或特定教师授课的所有课程
         请记得，当您在Django模型中定义外键关系时，可以通过on_delete参数来指定当被引用的对象被删除时应该如何处理关联对象
+        如果查找到一个人的姓名name在students表中，就不要再查询teachers表，如果查找到一个人的姓名name在teachers表中，就不要再查询students表
     再添加一个需求：你在写sql语句的时候就不要换行了比如，你原来可能写成：
     ```sql
         SELECT data_price.price
