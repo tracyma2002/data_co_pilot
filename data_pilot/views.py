@@ -27,9 +27,8 @@ from django.http import HttpRequest
 logger = logging.getLogger(__name__)
 
 def index(request):
-    #data = request.GET['data']
-    return HttpResponse("data-co-pilot")
-
+    # 确保 index 视图渲染 index.html
+    return render(request, 'index.html')
 def myhome(request):
     return render(request,"index.html")
 
