@@ -52,6 +52,7 @@ def get_sql(request):
         student_courses模型通过外键student_id与students模型连接，所以要使用student_id=students.id作为连接条件
         同理，student_courses模型通过外键course_id与courses模型连接，所以要使用course_id=courses.course_id作为连接条件
         当您需要查询某个学生的所有课程时，可以通过students模型的student_course_set相关名称来访问
+        当您需要查询某个学生所选的课程数量时（即我问某个学生选了几门课程，某个学生选择的课程门数），可以通过COUNT(student_courses.course_id)来输出
         如果您想查询某个课程的所有学生，可以通过courses模型的student_course_set相关名称来访问
         使用Django的ORM系统，您可以通过模型的字段和方法来构建复杂的查询，例如筛选特定年龄段的学生或特定教师授课的所有课程
         请记得，当您在Django模型中定义外键关系时，可以通过on_delete参数来指定当被引用的对象被删除时应该如何处理关联对象
