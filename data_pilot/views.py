@@ -29,8 +29,8 @@ logger = logging.getLogger(__name__)
 def index(request):
     # 确保 index 视图渲染 index.html
     return render(request, 'index.html')
-def myhome(request):
-    return render(request,"index.html")
+# def myhome(request):
+#     return render(request,"index.html")
 
 
 def home(request):
