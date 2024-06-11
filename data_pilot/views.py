@@ -133,6 +133,10 @@ def add_query(request):
             # 获取查询结果
             result = cursor.fetchall()
 
+        request.session['query_result'] = result
+
+
+
         # 打印结果
         # for row in result:
         #     print(row[0])  # 假设查询结果的第一列是 price
@@ -144,3 +148,41 @@ def add_query(request):
         logger.error("数据库查询出错: %s", e)
         # 返回错误信息
         return HttpResponse("您输入的查询语言有问题，请仔细检查后再查询。")
+
+
+def get_query_results(request):
+    # 假设这是从数据库查询得到的原始结果
+    # 这里我们使用 add_query 函数执行查询后的结果作为示例
+
+    # 由于我们没有实际的数据库查询，我们将使用模拟数据
+    mock_query_results = request.session.get('query_result', [])
+
+    # 初始化柱状图和饼图的数据结构
+    bar_categories = []
+    bar_values = []
+    pie_series_data = []
+
+    # 将查询结果转换为 ECharts 所需的数据格式
+    for course_name, student_count in mock_query_results:
+        bar_categories.append(course_name)  # 柱状图的类别（课程名称）
+        bar_values.append(student_count)  # 柱状图的值（选课学生数量）
+
+        # 对于饼图，我们创建一个包含名称和值的对象
+        pie_series_data.append({
+            'name': course_name,
+            'value': student_count
+        })
+
+    # 准备返回的数据结构
+    echarts_data = {
+        'barChartData': {
+            'categories': bar_categories,  # 柱状图的类别数据
+            'values': bar_values,  # 柱状图的值数据
+        },
+        'pieChartData': pie_series_data  # 饼图的数据
+    }
+
+
+    # 返回 JSON 响应
+    return JsonResponse(echarts_data)
+
