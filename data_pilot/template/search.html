@@ -92,7 +92,8 @@
 {#    <div id="results-block" class="bg-light p-3">#}
 {#        <!-- 结果将在这里显示 -->#}
 {#    </div>#}
-    <form action="sql/" method="post">
+{#    <form action="sql/" method="post">#}
+    <form id="query-form" action="{% url 'add_query' %}" method="post">
     {% csrf_token %}
     <div class="section">
         <h2>查询问题</h2>
@@ -104,8 +105,18 @@
         <input type="submit" value="提交查询">
     </div>
    </form>
-  </div>
 
+    {% if result %}
+    <div class="section">
+        <h2>查询结果</h2>
+        <ul>
+        {% for item in result %}
+            <li>{{ item }}</li>  <!-- 根据实际结果调整这里的模板标签 -->
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+  </div>
 
 <script>
     $(document).ready(function () {

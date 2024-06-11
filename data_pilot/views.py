@@ -134,10 +134,10 @@ def add_query(request):
             result = cursor.fetchall()
 
         # 打印结果
-        for row in result:
-            print(row[0])  # 假设查询结果的第一列是 price
-
-        return HttpResponse(result)
+        # for row in result:
+        #     print(row[0])  # 假设查询结果的第一列是 price
+        context = {'result': result}
+        return render(request, 'search.html', context)
 
     except Exception as e:
         # 记录错误日志
