@@ -22,7 +22,12 @@ from django.db import connection
 from . import api
 import logging
 from django.http import HttpRequest
-
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
+from django.views.decorators.http import require_http_methods
 # 引入日志记录器
 logger = logging.getLogger(__name__)
 
@@ -33,51 +38,59 @@ def index(request):
 #     return render(request,"index.html")
 
 
+@require_http_methods(["GET", "POST"])
+def register(request):
+    if request.method == 'POST':
+        # 获取表单数据
+        username = request.POST.get('database_account')
+        password = request.POST.get('database_password')
+
+        # 验证输入数据的有效性
+        if not username or not password:
+            return HttpResponse("用户名和密码不能为空", status=400)
+
+        # 检查用户名是否已存在
+        try:
+            User.objects.get(username=username)
+            return HttpResponse("用户名已存在", status=400)
+        except User.DoesNotExist:
+            pass
+
+        # 创建新用户，make_password自动加密密码
+        user = User.objects.create_user(username=username, password=make_password(password))
+        user.save()
+
+        # 注册成功后，重定向到首页
+        return redirect('index')
+    else:
+        # 显示注册表单
+        return render(request, 'register.html')
+
+# 登录视图函数
 def home(request):
-    # 检查请求方法是否为POST
     if request.method == 'POST':
         # 获取表单提交的用户名和密码
         username = request.POST['database_account']
         password = request.POST['database_password']
 
-        # 这里应该有一个真实的用户认证逻辑，比如检查数据库中的用户
-        # 为了示例，我们假设用户名是'123'，密码是'456'
-        if username == '123456' and password == '456':
-            return render(request,"search.html")
+        # 使用Django的authenticate函数进行用户认证
+        user = authenticate(username=username, password=password)
+
+        # 如果用户认证成功
+        if user is not None:
+            # 使用login函数登录用户
+            login(request, user)
+            # 假设登录成功后重定向到search页面
+            return redirect('search')
         else:
-            return HttpResponse("用户名或密码错误")
+            # 如果认证失败，返回错误信息
+            return HttpResponse("用户名或密码错误", status=401)
 
-
-def register(request):
-    if request.method == 'POST':
-        # 获取表单数据
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        email = request.POST.get('email')
-
-        # 验证输入数据的有效性
-        if not username or not password or not email:
-            return JsonResponse({"error": "所有字段都是必填的"}, status=400)
-
-        # 检查用户名是否已存在
-        try:
-            user = User.objects.get(username=username)
-            return JsonResponse({"error": "用户名已存在"}, status=400)
-        except User.DoesNotExist:
-            pass
-
-        # 创建新用户
-        try:
-            User.objects.create_user(username=username, email=email, password=make_password(password))
-        except ValidationError as e:
-            return JsonResponse({"error": str(e)}, status=400)
-
-        # 注册成功后，重定向到登录页面或其他页面
-        return redirect('login')  # 假设有一个名为 'login' 的登录视图函数
-
-    # 如果是GET请求，显示注册表单
+    # 如果不是POST请求，显示登录表单
     else:
-        return render(request, 'register.html')
+        # 这里可以添加代码来渲染并返回登录表单
+        return render(request, 'index.html')
+
 
 def search(request):
     return render(request, 'search.html')

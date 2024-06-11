@@ -60,17 +60,6 @@
         <h2>用户登录</h2>
         <form action="/home/search/" method="post">
             {% csrf_token %}
-            <label for="database-type">数据库类型:</label>
-            <select id="database-type" name="database_type">
-                <option value="mysql">MySQL</option>
-                <option value="postgresql">PostgreSQL</option>
-                <option value="sqlserver">SQLServer</option>
-                <option value="sqlite">SQLite</option>
-                <!-- 根据需要添加更多数据库类型 -->
-            </select><br><br>
-
-            <label for="region">地区:</label>
-            <input type="text" id="region" name="region" placeholder="请输入地区"><br><br>
 
             <label for="database-account">数据库账号:</label>
             <input type="text" id="database-account" name="database_account" placeholder="请输入账号"><br><br>
@@ -80,6 +69,7 @@
 
             <button type="submit">登录</button><br>
             <button type="reset">取消</button>
+             <p>还没有账户？<a href="{% url 'register' %}">注册</a></p>
         </form>
     </div>
 
