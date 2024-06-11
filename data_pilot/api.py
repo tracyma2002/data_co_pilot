@@ -48,7 +48,7 @@ def get_sql(request):
         当您需要管理学生选课信息时，请使用student_courses模型。通过student_id和course_id外键字段与students和courses模型关联，并确保通过unique_together元选项保持学生与课程组合的唯一性
         在执行数据库JOIN操作时，例如查询某个学生的所有课程，可以使用Django的select_related和prefetch_related方法来优化查询性能
         student_profiles模型通过外键student_id与students模型一对一连接，所以当您在使用Django ORM查询时，要使用student_profiles.student_id=students.id作为关联条件
-        courses模型通过外键teacher与teachers模型连接，所以当您在使用Django ORM查询时，要使用teacher=teachers.id作为关联条件
+        courses模型通过外键teacher_id与teachers模型连接，所以当您在使用Django ORM查询时，要使用courses.teacher_id=teachers.id作为连接条件
         student_courses模型通过外键student_id与students模型连接，所以要使用student_id=students.id作为连接条件
         同理，student_courses模型通过外键course_id与courses模型连接，所以要使用course_id=courses.course_id作为连接条件
         当您需要查询某个学生的所有课程时，可以通过students模型的student_course_set相关名称来访问
@@ -58,6 +58,7 @@ def get_sql(request):
         如果查找到一个人的姓名name在students表中，就不要再查询teachers表，如果查找到一个人的姓名name在teachers表中，就不要再查询students表
         查询中包含课程名称时,用courses.course_name来筛选
         "高等数学I","高等数学II","物理基础","现代物理","有机化学","无机化学","生物科学导论"是课程名称
+        "赵强","钱芳","孙磊","李娜","周杰"是教师（老师）名称
     再添加一个需求：你在写sql语句的时候就不要换行了比如，你原来可能写成：
     ```sql
         SELECT students.name, courses.course_name 
