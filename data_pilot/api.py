@@ -42,30 +42,33 @@ def get_sql(request):
         class Meta:
             unique_together = ('student_id', 'course_id')
         当您需要创建或查询学生信息时，请使用students模型，并可以通过学生的id、name、age或gender字段进行过滤
-        要获取或更新学生的个人资料，如address和phone，请使用student_profiles模型，并通过外键student_id与students模型关联
+        要获取或更新学生的个人资料(全部信息、详细信息、具体信息)，如address和phone，请使用student_profiles模型，并通过外键student_id与students模型关联
         在添加或修改教师信息时，请使用teachers模型，并可以通过教师的id、name或subject字段进行搜索
         创建或查询课程详情时，请使用courses模型，并可以通过课程的course_id或course_name字段进行筛选。同时，可以通过外键teacher与teachers模型关联以获取授课教师信息
         当您需要管理学生选课信息时，请使用student_courses模型。通过student_id和course_id外键字段与students和courses模型关联，并确保通过unique_together元选项保持学生与课程组合的唯一性
         在执行数据库JOIN操作时，例如查询某个学生的所有课程，可以使用Django的select_related和prefetch_related方法来优化查询性能
-        student_profiles模型通过外键student_id与students模型一对一连接，所以当您在使用Django ORM查询时，要使用student_id=students.id作为关联条件
-        courses模型通过外键teacher与teachers模型连接，所以当您在使用Django ORM查询时，要使用teacher=teachers.id作为关联条件
+        student_profiles模型通过外键student_id与students模型一对一连接，所以当您在使用Django ORM查询时，要使用student_profiles.student_id=students.id作为关联条件
+        courses模型通过外键teacher_id与teachers模型连接，所以当您在使用Django ORM查询时，要使用courses.teacher_id=teachers.id作为连接条件
         student_courses模型通过外键student_id与students模型连接，所以要使用student_id=students.id作为连接条件
         同理，student_courses模型通过外键course_id与courses模型连接，所以要使用course_id=courses.course_id作为连接条件
         当您需要查询某个学生的所有课程时，可以通过students模型的student_course_set相关名称来访问
         如果您想查询某个课程的所有学生，可以通过courses模型的student_course_set相关名称来访问
         使用Django的ORM系统，您可以通过模型的字段和方法来构建复杂的查询，例如筛选特定年龄段的学生或特定教师授课的所有课程
         请记得，当您在Django模型中定义外键关系时，可以通过on_delete参数来指定当被引用的对象被删除时应该如何处理关联对象
+        如果查找到一个人的姓名name在students表中，就不要再查询teachers表，如果查找到一个人的姓名name在teachers表中，就不要再查询students表
+        查询中包含课程名称时,用courses.course_name来筛选
+        "高等数学I","高等数学II","物理基础","现代物理","有机化学","无机化学","生物科学导论"是课程名称
+        "赵强","钱芳","孙磊","李娜","周杰"是教师（老师）名称
     再添加一个需求：你在写sql语句的时候就不要换行了比如，你原来可能写成：
     ```sql
-        SELECT data_price.price
-    FROM data_Price
-    JOIN data_GPU ON data_Price.GPU_id = data_gpu.id
-    JOIN data_Brand ON data_Price.Brand_id = data_brand.id
-    WHERE data_GPU.GPU_name = 'GeForce RTX 4090'
-    AND data_Brand.name = 'COLORFUL';
+        SELECT students.name, courses.course_name 
+    FROM students 
+    JOIN student_courses ON students.id = student_courses.student_id
+    JOIN courses ON student_courses.course_id = courses.course_id
+    WHERE students.name = 'Alice' AND courses.course_name LIKE '%Calculus%';
     ```
     但是我要你写成：
-    ```sql SELECT data_price.price FROM data_Price JOIN data_GPU ON data_Price.GPU_id = data_gpu.id JOIN data_Brand ON data_Price.Brand_id = data_brand.id WHERE data_GPU.GPU_name = 'GeForce RTX 4090' AND data_Brand.name = 'COLORFUL'; ```
+    ```sql SELECT students.name, courses.course_name FROM students JOIN student_courses ON students.id = student_courses.student_id JOIN courses ON student_courses.course_id = courses.course_id WHERE students.name = 'Alice' AND courses.course_name LIKE '%Calculus%';
         很简单就是把你原来写的换行符改成空格就行
         """
     messages = [{'role': 'system', 'content': 'You are a helpful assistant who masters'
